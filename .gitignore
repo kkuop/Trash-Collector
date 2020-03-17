@@ -348,3 +348,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+#User-defined
+/TrashCollectorWebApp/wwwroot/css*
+/TrashCollectorWebApp/wwwroot/js*
+/TrashCollectorWebApp/wwwroot/lib*
+/TrashCollectorWebApp/appsettings*
