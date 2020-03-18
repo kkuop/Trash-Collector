@@ -1,0 +1,11 @@
+Employee
+ - FirstName
+ - LastName
+ - 
+
+Customer
+ - FirstName
+ - LastName
+ - 
+
+
