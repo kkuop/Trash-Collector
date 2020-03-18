@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollectorWebApp.Data;
 
 namespace TrashCollectorWebApp.Controllers
 {
+    [Authorize(Roles = "Employee")]
     public class EmployeeController : Controller
     {
         private ApplicationDbContext _context { get; }
@@ -18,6 +20,7 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Employee
         public ActionResult Index()
         {
+            //bring in a list of the customers with the same ZIP
             return View();
         }
 
