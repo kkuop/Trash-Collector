@@ -38,9 +38,60 @@ namespace TrashCollectorWebApp.Controllers
             return View(loggedInUser);
         }
         // POST: Customer/PayBill
-        public ActionResult PayBill(Customer customer)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PayBill(int id, Customer customer)
         {
             return View();
+        }
+        // GET: Customer/OneTimePickUp
+        public ActionResult OneTimePickUp(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        // POST: Customer/OneTimePickUp
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult OneTimePickUp(int id, Customer customer)
+        {
+            try
+            {
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                foundCustomer.ExtraPickUpDate = customer.ExtraPickUpDate;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        // GET: Customer/TemporarySuspend
+        public ActionResult TemporarySuspend(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        // POST: Customer/TemporarySuspend
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TemporarySuspend(int id, Customer customer)
+        {
+            try
+            {
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                foundCustomer.TemporarySuspendStart = customer.TemporarySuspendStart;
+                foundCustomer.TemporarySuspendEnd = customer.TemporarySuspendEnd;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
         // GET: Customer/Details/5
         public ActionResult Details(int id)

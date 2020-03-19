@@ -13,13 +13,13 @@
     <h3>Amount Due: $@Html.DisplayFor(model => model.Balance)</h3>
     <ul class="row">
         <li class="col-sm-12">
-            <a class="text-dark" asp-area="" asp-controller="Customer" asp-action="PayBill">Pay My Bill</a>            
+            @Html.ActionLink("Pay My Bill","PayBill", new { id = Model.CustomerId})           
         </li>
         <li class = "col-sm-12">
-            <a class="text-dark" asp-area="" asp-controller="Customer" asp-action="OneTimePickUp">Schedule a One-Time Pick Up</a>
+            @Html.ActionLink("Schedule A One-Time Pick Up", "OneTimePickUp", new { id = Model.CustomerId })
         </li>
         <li class = "col-sm-12">
-            <a class="text-dark" asp-area="" asp-controller="Customer" asp-action="TemporarySuspend">Temporarily Suspend All Pick Ups</a>
+            @Html.ActionLink("Temporarily Suspend All Pick Ups","TemporarySuspend", new { id = Model.CustomerId })
         </li>
         <li class = "col-sm-12">
             @Html.ActionLink("Edit Profile","Edit", new { id = Model.CustomerId})
@@ -27,7 +27,4 @@
 
     </ul>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
