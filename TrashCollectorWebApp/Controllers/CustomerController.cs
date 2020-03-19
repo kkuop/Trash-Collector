@@ -22,8 +22,9 @@ namespace TrashCollectorWebApp.Controllers
         public ActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.First(a => a.IdentityUserId == userId);
             
-            return View();
+            return View(loggedInUser);
         }
 
         // GET: Customer/Details/5
