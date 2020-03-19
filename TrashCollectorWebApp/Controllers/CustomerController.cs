@@ -30,7 +30,18 @@ namespace TrashCollectorWebApp.Controllers
             }
             return View(loggedInUser);
         }
-
+        // GET: Customer/PayBill
+        public ActionResult PayBill(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        // POST: Customer/PayBill
+        public ActionResult PayBill(Customer customer)
+        {
+            return View();
+        }
         // GET: Customer/Details/5
         public ActionResult Details(int id)
         {
@@ -75,12 +86,20 @@ namespace TrashCollectorWebApp.Controllers
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Customer customer)
         {
             try
             {
                 // TODO: Add update logic here
-
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                foundCustomer.FirstName = customer.FirstName;
+                foundCustomer.LastName = customer.LastName;
+                foundCustomer.AddressLine1 = customer.AddressLine1;
+                foundCustomer.City = customer.City;
+                foundCustomer.State = customer.State;
+                foundCustomer.ZIP = customer.ZIP;
+                foundCustomer.PickUpDay = customer.PickUpDay;
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -14,9 +14,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <input asp-for="CustomerId" class="form-control" />
-                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                <input type="hidden" asp-for="CustomerId" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -52,26 +50,6 @@
                 <label asp-for="PickUpDay" class="control-label"></label>
                 <input asp-for="PickUpDay" class="form-control" />
                 <span asp-validation-for="PickUpDay" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExtraPickUpDate" class="control-label"></label>
-                <input asp-for="ExtraPickUpDate" class="form-control" />
-                <span asp-validation-for="ExtraPickUpDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Balance" class="control-label"></label>
-                <input asp-for="Balance" class="form-control" />
-                <span asp-validation-for="Balance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TemporarySuspendStart" class="control-label"></label>
-                <input asp-for="TemporarySuspendStart" class="form-control" />
-                <span asp-validation-for="TemporarySuspendStart" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TemporarySuspendEnd" class="control-label"></label>
-                <input asp-for="TemporarySuspendEnd" class="form-control" />
-                <span asp-validation-for="TemporarySuspendEnd" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
