@@ -23,7 +23,10 @@ namespace TrashCollectorWebApp.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
-            
+            if(loggedInUser == null)
+            {
+                return RedirectToAction("Create", "Customer", null);
+            }
             return View(loggedInUser);
         }
 

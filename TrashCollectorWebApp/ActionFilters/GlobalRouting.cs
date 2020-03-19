@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TrashCollectorWebApp.Data;
+using TrashCollectorWebApp.Models;
 
 namespace TrashCollectorWebApp.ActionFilters
 {
@@ -18,6 +20,7 @@ namespace TrashCollectorWebApp.ActionFilters
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var controller = context.RouteData.Values["controller"];
+
             if(controller.Equals("Home"))
             {
                 if(_claimsPrincipal.IsInRole("Customer"))
@@ -30,9 +33,21 @@ namespace TrashCollectorWebApp.ActionFilters
                 }
             }
         }
+
         public void OnActionExecuted(ActionExecutedContext context)
         {
 
+        }
+        public void OnActionExecuted(ActionExecutingContext context, Customer customer)
+        {
+            var controller = context.RouteData.Values["controller"];
+            if (controller.Equals("Customer"))
+            {
+                if (customer == null)
+                {
+                    context.Result = new RedirectToActionResult("Create", "Customer", null);
+                }
+            }
         }
     }
 }
