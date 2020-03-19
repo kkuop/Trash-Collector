@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollectorWebApp.Data;
+using TrashCollectorWebApp.Models;
 
 namespace TrashCollectorWebApp.Controllers
 {
@@ -45,11 +46,15 @@ namespace TrashCollectorWebApp.Controllers
         // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Customer customer)
         {
             try
             {
                 // TODO: Add insert logic here
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
+                _context.Add(customer);
+                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -62,7 +67,9 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var foundCustomer = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(foundCustomer);
         }
 
         // POST: Customer/Edit/5
