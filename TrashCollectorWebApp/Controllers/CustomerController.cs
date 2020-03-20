@@ -186,9 +186,7 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
-            Customer customer = new Customer()
-            {
-            };
+            Customer customer = new Customer();
             return View(customer);
         }
 

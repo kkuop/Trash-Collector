@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollectorWebApp.Data;
+using TrashCollectorWebApp.Models;
 
 namespace TrashCollectorWebApp.Controllers
 {
@@ -22,14 +23,16 @@ namespace TrashCollectorWebApp.Controllers
         public ActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            var loggedInUser = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
             if (loggedInUser == null)
             {
-                return RedirectToAction("Create", "Customer", null);
+                return RedirectToAction("Create", "Employee", null);
             }
-            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP);
-            return View(loggedInUser);
             //bring in a list of the customers with the same ZIP
+            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP);
+            
+            return View(loggedInUser);
+            
         }
 
         // GET: Employee/Details/5
@@ -41,18 +44,23 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Employee/Create
         public ActionResult Create()
         {
-            return View();
+            Employee employee = new Employee();
+            return View(employee);
         }
 
         // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Employee employee)
         {
             try
             {
                 // TODO: Add insert logic here
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+                employee.IdentityUserId = userId;
+                _context.Add(employee);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
