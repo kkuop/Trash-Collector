@@ -17,7 +17,9 @@ namespace TrashCollectorWebApp.Models
         public string City { get; set; }
         public string State { get; set; }
         public int ZIP { get; set; }
-        public DayOfWeek PickUpDay { get; set; }
+        [ForeignKey("DayOfTheWeek")]
+        public int DayOfTheWeekId { get; set; }
+        public DayOfTheWeek DayOfTheWeek { get; set; }
         public DateTime ExtraPickUpDate { get; set; }
         public double Balance { get; set; }
         public DateTime TemporarySuspendStart { get; set; }
@@ -25,6 +27,8 @@ namespace TrashCollectorWebApp.Models
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
+        [NotMapped]
+        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
         public Customer()
         {
 

@@ -21,6 +21,9 @@
         <li class="col-sm-12">
             @Html.ActionLink("Pay My Bill","PayBill", new { id = Model.CustomerId})           
         </li>
+        <li class="col-sm-12">
+            @Html.ActionLink("Change My Pick Up Day", "ChangePickUpDay", new { id = Model.CustomerId})
+        </li>
         <li class = "col-sm-12">
             @Html.ActionLink("Schedule A One-Time Pick Up", "OneTimePickUp", new { id = Model.CustomerId })
         </li>

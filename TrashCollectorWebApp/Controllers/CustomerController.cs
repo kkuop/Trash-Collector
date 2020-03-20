@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TrashCollectorWebApp.Data;
 using TrashCollectorWebApp.Models;
 
@@ -41,6 +42,20 @@ namespace TrashCollectorWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PayBill(int id, Customer customer)
+        {
+            return View();
+        }
+        // GET: Customer/ChangePickUpDay
+        public ActionResult ChangePickUpDay(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        // POST: Customer/ChangePickUpDay
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePickUpDay(int id, Customer customer)
         {
             return View();
         }
@@ -102,7 +117,12 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
-            return View();
+            var days = _context.DaysOfTheWeek.ToList();
+            Customer customer = new Customer()
+            {
+                DaysOfTheWeek = days
+            };
+            return View(customer);
         }
 
         // POST: Customer/Create
@@ -113,7 +133,9 @@ namespace TrashCollectorWebApp.Controllers
             try
             {
                 // TODO: Add insert logic here
+
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 customer.IdentityUserId = userId;
                 _context.Add(customer);
                 _context.SaveChanges();
@@ -149,7 +171,7 @@ namespace TrashCollectorWebApp.Controllers
                 foundCustomer.City = customer.City;
                 foundCustomer.State = customer.State;
                 foundCustomer.ZIP = customer.ZIP;
-                foundCustomer.PickUpDay = customer.PickUpDay;
+                foundCustomer.DayOfTheWeekId = customer.DayOfTheWeekId;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
