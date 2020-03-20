@@ -57,7 +57,17 @@ namespace TrashCollectorWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangePickUpDay(int id, Customer customer)
         {
-            return View();
+            try
+            {
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                foundCustomer.DayOfTheWeek = customer.DayOfTheWeek;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
         // GET: Customer/OneTimePickUp
         public ActionResult OneTimePickUp(int id)
@@ -117,10 +127,8 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
-            var days = _context.DaysOfTheWeek.ToList();
             Customer customer = new Customer()
             {
-                DaysOfTheWeek = days
             };
             return View(customer);
         }
@@ -151,7 +159,7 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);            
             var foundCustomer = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
             return View(foundCustomer);
         }
@@ -171,7 +179,7 @@ namespace TrashCollectorWebApp.Controllers
                 foundCustomer.City = customer.City;
                 foundCustomer.State = customer.State;
                 foundCustomer.ZIP = customer.ZIP;
-                foundCustomer.DayOfTheWeekId = customer.DayOfTheWeekId;
+                foundCustomer.DayOfTheWeek = customer.DayOfTheWeek;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

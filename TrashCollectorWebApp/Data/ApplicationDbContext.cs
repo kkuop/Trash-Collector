@@ -12,7 +12,6 @@ namespace TrashCollectorWebApp.Data
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<DayOfTheWeek> DaysOfTheWeek { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
