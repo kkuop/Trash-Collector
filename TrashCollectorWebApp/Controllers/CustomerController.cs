@@ -69,11 +69,40 @@ namespace TrashCollectorWebApp.Controllers
                 return View();
             }
         }
+        // GET: Customer/CancelPickUpDay
+        [HttpGet]
+        public ActionResult CancelPickUpDay(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        // POST: Customer/CancelPickUpDay
+        [HttpPost]
+        public ActionResult CancelPickUpDay(int id, Customer customer)
+        {
+            try
+            {
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                foundCustomer.isExtraPickUpDateSet = false;
+                foundCustomer.ExtraPickUpDate = default;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
         // GET: Customer/OneTimePickUp
         public ActionResult OneTimePickUp(int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            if(loggedInUser.ExtraPickUpDate < DateTime.Today)
+            {
+                loggedInUser.isExtraPickUpDateSet = false;
+            }
             return View(loggedInUser);
         }
         // POST: Customer/OneTimePickUp
@@ -85,6 +114,7 @@ namespace TrashCollectorWebApp.Controllers
             {
                 Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
                 foundCustomer.ExtraPickUpDate = customer.ExtraPickUpDate;
+                foundCustomer.isExtraPickUpDateSet = true;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -98,6 +128,10 @@ namespace TrashCollectorWebApp.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            if (loggedInUser.TemporarySuspendEnd < DateTime.Today)
+            {
+                loggedInUser.isTemporarySuspendSet = false;
+            }
             return View(loggedInUser);
         }
         // POST: Customer/TemporarySuspend
@@ -110,6 +144,7 @@ namespace TrashCollectorWebApp.Controllers
                 Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
                 foundCustomer.TemporarySuspendStart = customer.TemporarySuspendStart;
                 foundCustomer.TemporarySuspendEnd = customer.TemporarySuspendEnd;
+                foundCustomer.isTemporarySuspendSet = true;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

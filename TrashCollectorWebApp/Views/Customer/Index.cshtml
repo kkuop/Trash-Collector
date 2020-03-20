@@ -13,25 +13,27 @@
 
 <div>
     <h4>What would you like to do today?</h4>
-    <hr >
-    <h5 style="display:@(Model.TemporarySuspendStart > DateTime.Today ? "none":"inline"); color:red;">You have a temporary hold set for @Html.Raw(Model.TemporarySuspendStart.ToShortDateString()) - @Html.Raw(Model.TemporarySuspendEnd.ToShortDateString())</h5>
+    <hr>
+    <h5 style="display:@(Model.isTemporarySuspendSet == true ? "none":"inline"); color:red;">You have a temporary hold set for @Html.Raw(Model.TemporarySuspendStart.ToShortDateString()) - @Html.Raw(Model.TemporarySuspendEnd.ToShortDateString())</h5>
+    <hr>
+    <h5 style="display:@(Model.isExtraPickUpDateSet == true ? "none":"inline"); color:red;">You have an extra pick up date set for @Html.Raw(Model.ExtraPickUpDate.ToShortDateString()) | <a asp-action="CancelPickUpDay" asp-route-id="@Model.CustomerId">Cancel</a></h5>
     <hr>
     <h3>Amount Due: $@Html.DisplayFor(model => model.Balance)</h3>
     <ul class="row">
         <li class="col-sm-12">
-            @Html.ActionLink("Pay My Bill","PayBill", new { id = Model.CustomerId})           
+            @Html.ActionLink("Pay My Bill", "PayBill", new { id = Model.CustomerId })
         </li>
         <li class="col-sm-12">
-            @Html.ActionLink("Change My Pick Up Day", "ChangePickUpDay", new { id = Model.CustomerId})
+            @Html.ActionLink("Change My Pick Up Day", "ChangePickUpDay", new { id = Model.CustomerId })
         </li>
-        <li class = "col-sm-12">
+        <li class="col-sm-12">
             @Html.ActionLink("Schedule A One-Time Pick Up", "OneTimePickUp", new { id = Model.CustomerId })
         </li>
-        <li class = "col-sm-12">
-            @Html.ActionLink("Temporarily Suspend All Pick Ups","TemporarySuspend", new { id = Model.CustomerId })
+        <li class="col-sm-12">
+            @Html.ActionLink("Temporarily Suspend All Pick Ups", "TemporarySuspend", new { id = Model.CustomerId })
         </li>
-        <li class = "col-sm-12">
-            @Html.ActionLink("Edit Profile","Edit", new { id = Model.CustomerId})
+        <li class="col-sm-12">
+            @Html.ActionLink("Edit Profile", "Edit", new { id = Model.CustomerId })
         </li>
     </ul>
 </div>

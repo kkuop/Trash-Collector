@@ -1,0 +1,27 @@
+﻿@model TrashCollectorWebApp.Models.Customer
+
+@{
+    ViewData["Title"] = "CancelPickUpDay";
+    Layout = "~/Views/Shared/_customerLayout.cshtml";
+}
+
+<h1>Cancel Pick Up Day</h1>
+
+<h3>Are you sure you want to cancel this?</h3>
+<div>
+    <h4>Pick Up Date Set:</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ExtraPickUpDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ExtraPickUpDate)
+        </dd>
+    </dl>
+    
+    <form asp-action="CancelPickUpDay">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
