@@ -6,7 +6,10 @@
 }
 <style>
     h4 + hr {
-        display: @(Model.TemporarySuspendStart > DateTime.Today ? "none" : "");
+        display: @(Model.isTemporarySuspendSet == false ? "none" : "");
+    }
+    h5 + hr {
+        display: @(Model.isExtraPickUpDateSet == false ? "none" : "");
     }
 </style>
 <h1>Welcome @Html.DisplayFor(model => model.FirstName),</h1>
@@ -14,9 +17,10 @@
 <div>
     <h4>What would you like to do today?</h4>
     <hr>
-    <h5 style="display:@(Model.isTemporarySuspendSet == true ? "none":"inline"); color:red;">You have a temporary hold set for @Html.Raw(Model.TemporarySuspendStart.ToShortDateString()) - @Html.Raw(Model.TemporarySuspendEnd.ToShortDateString())</h5>
+    <h5 style="display:@(Model.isTemporarySuspendSet == false ? "none":"inline"); color:red;">You have a temporary hold set for @Html.Raw(Model.TemporarySuspendStart.ToShortDateString()) - @Html.Raw(Model.TemporarySuspendEnd.ToShortDateString()) | <a asp-action="CancelTempSuspend" asp-route-id="@Model.CustomerId">Cancel</a></h5>
     <hr>
-    <h5 style="display:@(Model.isExtraPickUpDateSet == true ? "none":"inline"); color:red;">You have an extra pick up date set for @Html.Raw(Model.ExtraPickUpDate.ToShortDateString()) | <a asp-action="CancelPickUpDay" asp-route-id="@Model.CustomerId">Cancel</a></h5>
+    <h5 style="display:@(Model.isExtraPickUpDateSet == false ? "none":"inline"); color:red;">You have an extra pick up date set for @Html.Raw(Model.ExtraPickUpDate.ToShortDateString()) | <a asp-action="CancelPickUpDay" asp-route-id="@Model.CustomerId">Cancel</a></h5>
+    <h3></h3>
     <hr>
     <h3>Amount Due: $@Html.DisplayFor(model => model.Balance)</h3>
     <ul class="row">

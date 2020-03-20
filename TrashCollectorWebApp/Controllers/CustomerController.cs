@@ -83,9 +83,33 @@ namespace TrashCollectorWebApp.Controllers
         {
             try
             {
-                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == customer.CustomerId).SingleOrDefault();
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
                 foundCustomer.isExtraPickUpDateSet = false;
                 foundCustomer.ExtraPickUpDate = default;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        [HttpGet]
+        public ActionResult CancelTempSuspend(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            return View(loggedInUser);
+        }
+        [HttpPost]
+        public ActionResult CancelTempSuspend(int id, Customer customer)
+        {
+            try
+            {
+                Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
+                foundCustomer.isTemporarySuspendSet = false;
+                foundCustomer.TemporarySuspendStart = default;
+                foundCustomer.TemporarySuspendEnd = default;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
