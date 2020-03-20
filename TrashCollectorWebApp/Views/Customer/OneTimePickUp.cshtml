@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_customerLayout.cshtml";
 }
 
-<h1>OneTimePickUp</h1>
+<h1>One free extra pick up per month</h1>
 
-<h4>Customer</h4>
+<h4></h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -46,7 +46,7 @@
                 <span asp-validation-for="DayOfTheWeek" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ExtraPickUpDate" class="control-label"></label>
+                <label asp-for="ExtraPickUpDate" class="control-label">Pick your date</label>
                 <input type="date" asp-for="ExtraPickUpDate" class="form-control" value="" min="@string.Format("{0:yyyy-MM-dd}", DateTime.Today)" max="@string.Format("{0:yyyy-MM-dd}", DateTime.Today.AddDays(30))"/>
                 <span asp-validation-for="ExtraPickUpDate" class="text-danger"></span>
             </div>

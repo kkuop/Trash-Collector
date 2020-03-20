@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,8 +21,15 @@ namespace TrashCollectorWebApp.Controllers
         // GET: Employee
         public ActionResult Index()
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Customers.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            if (loggedInUser == null)
+            {
+                return RedirectToAction("Create", "Customer", null);
+            }
+            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP);
+            return View(loggedInUser);
             //bring in a list of the customers with the same ZIP
-            return View();
         }
 
         // GET: Employee/Details/5
