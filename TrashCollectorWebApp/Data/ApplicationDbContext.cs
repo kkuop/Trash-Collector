@@ -12,6 +12,7 @@ namespace TrashCollectorWebApp.Data
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<PickUp> PickUps { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

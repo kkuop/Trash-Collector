@@ -29,10 +29,11 @@ namespace TrashCollectorWebApp.Controllers
                 return RedirectToAction("Create", "Employee", null);
             }
             //bring in a list of the customers with the same ZIP
-            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP);
+            var day = DateTime.Today.DayOfWeek;
+            var date = DateTime.Today;
+            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date);
             
             return View(loggedInUser);
-            
         }
 
         // GET: Employee/Details/5
