@@ -31,7 +31,7 @@ namespace TrashCollectorWebApp.Controllers
             //bring in a list of the customers with the same ZIP
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
-            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date);
+            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date).Where(a => date < a.TemporarySuspendStart || date > a.TemporarySuspendStart && date > a.TemporarySuspendEnd);
             
             return View(loggedInUser);
         }
