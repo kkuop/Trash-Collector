@@ -36,7 +36,7 @@ namespace TrashCollectorWebApp.Controllers
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
             loggedInUser.listOfCustomers = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date).Where(a => date < a.TemporarySuspendStart || date > a.TemporarySuspendStart && date > a.TemporarySuspendEnd).ToList();
-            loggedInUser.listOfCustomersToExclude = _context.Customers.Join(_context.PickUps, a => a.CustomerId, b => b.CustomerId, (a, b) => new { Customer = a, PickUp = b }).Where(c => c.Customer.ZIP == loggedInUser.ZIP).Where(c => c.Customer.DayOfTheWeek == day || c.Customer.ExtraPickUpDate == date).Where(c => date < c.Customer.TemporarySuspendStart || date > c.Customer.TemporarySuspendStart && date > c.Customer.TemporarySuspendEnd).Select(c => c.Customer).ToList();
+            loggedInUser.listOfCustomersToExclude = _context.Customers.Join(_context.PickUps, a => a.CustomerId, b => b.CustomerId, (a, b) => new { Customer = a, PickUp = b }).Where(c => c.PickUp.PickUpDate == DateTime.Today).Where(c => c.Customer.ZIP == loggedInUser.ZIP).Where(c => c.Customer.DayOfTheWeek == day || c.Customer.ExtraPickUpDate == date).Where(c => date < c.Customer.TemporarySuspendStart || date > c.Customer.TemporarySuspendStart && date > c.Customer.TemporarySuspendEnd).Select(c => c.Customer).ToList();
             return View(loggedInUser);
         }
         
@@ -93,6 +93,7 @@ namespace TrashCollectorWebApp.Controllers
                 var foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var foundEmployee = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+                foundCustomer.Balance += 4.99;
                 pickUp.Customer = foundCustomer;
                 pickUp.CustomerId = id;
                 pickUp.Employee = foundEmployee;
