@@ -40,7 +40,9 @@
                         @Html.Raw(item.LastName)
                     </td>
                     <td>
-                        @Html.Raw(item.AddressLine1)
+                        <a asp-action="ViewCustomerLocation" asp-route-id="@item.CustomerId">
+                            @Html.Raw(item.AddressLine1)
+                        </a>
                     </td>
                     <td>
                         @Html.Raw(item.ZIP)
