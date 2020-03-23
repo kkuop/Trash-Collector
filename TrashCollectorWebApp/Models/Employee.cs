@@ -19,6 +19,10 @@ namespace TrashCollectorWebApp.Models
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
+        [NotMapped]
+        public List<Customer> listOfCustomers { get; set; }
+        [NotMapped]
+        public List<Customer> listOfCustomersToExclude { get; set; }
         public Employee()
         {
 

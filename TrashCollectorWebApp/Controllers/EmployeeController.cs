@@ -35,8 +35,8 @@ namespace TrashCollectorWebApp.Controllers
             //bring in a list of the customers with the same ZIP
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
-            ViewBag.ListOfCustomers  = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date).Where(a => date < a.TemporarySuspendStart || date > a.TemporarySuspendStart && date > a.TemporarySuspendEnd);
-            
+            loggedInUser.listOfCustomers = _context.Customers.Where(a => a.ZIP == loggedInUser.ZIP).Where(a => a.DayOfTheWeek == day || a.ExtraPickUpDate == date).Where(a => date < a.TemporarySuspendStart || date > a.TemporarySuspendStart && date > a.TemporarySuspendEnd).ToList();
+            loggedInUser.listOfCustomersToExclude = _context.Customers.Join(_context.PickUps, a => a.CustomerId, b => b.CustomerId, (a, b) => new { Customer = a, PickUp = b }).Where(c => c.Customer.ZIP == loggedInUser.ZIP).Where(c => c.Customer.DayOfTheWeek == day || c.Customer.ExtraPickUpDate == date).Where(c => date < c.Customer.TemporarySuspendStart || date > c.Customer.TemporarySuspendStart && date > c.Customer.TemporarySuspendEnd).Select(c => c.Customer).ToList();
             return View(loggedInUser);
         }
         
@@ -72,10 +72,39 @@ namespace TrashCollectorWebApp.Controllers
         }
 
         // POST: Employee/ViewCustomerLocation
-        [HttpPost]
-        public ActionResult ViewCustomerLocation(int id, Employee employee)
+
+
+        // GET: Employee/ConfirmPickUp
+        [HttpGet]
+        public ActionResult ConfirmPickUp(int id)
         {
-            return View();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
+            return View(foundCustomer);
+        }
+
+        // POST: Employee/ConfirmPickUp
+        [HttpPost]
+        public ActionResult ConfirmPickUp(int id, Customer customer)
+        {
+            try
+            {
+                PickUp pickUp = new PickUp();
+                var foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var foundEmployee = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+                pickUp.Customer = foundCustomer;
+                pickUp.CustomerId = id;
+                pickUp.Employee = foundEmployee;
+                pickUp.EmployeeId = foundEmployee.EmployeeId;
+                pickUp.PickUpDate = DateTime.Today;
+                _context.PickUps.Add(pickUp);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            } catch
+            {
+                return View();
+            }
         }
 
         // GET: Employee/Details/5

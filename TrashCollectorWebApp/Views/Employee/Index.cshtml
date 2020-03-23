@@ -4,16 +4,23 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_employeeLayout.cshtml";
 }
+@{ 
+    DateTime dateTime = DateTime.Today;
+    var joinList = ViewBag.TestList;
+}
 
 <h1>Welcome @Html.Raw(Model.FirstName),</h1>
 
 <div>
-    <h4>Your Pick Ups today:</h4>
+    <h4>Your Pick Ups for today:</h4> 
     <hr />
     <div>
         <table>
             <thead>
                 <tr>
+                    <th>
+                        Pick Up
+                    </th>
                     <th>
                         @Html.DisplayNameFor(model => model.FirstName)
                     </th>
@@ -23,31 +30,36 @@
                     <th>
                         @Html.DisplayNameFor(model => model.AddressLine1)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ZIP)
-                    </th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in ViewBag.ListOfCustomers)
+                @foreach (var item in Model.listOfCustomers)
                 {
-                <tr>
-                    <td>
-                        @Html.Raw(item.FirstName)
-                    </td>
-                    <td>
-                        @Html.Raw(item.LastName)
-                    </td>
-                    <td>
-                        <a asp-action="ViewCustomerLocation" asp-route-id="@item.CustomerId">
-                            @Html.Raw(item.AddressLine1)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.Raw(item.ZIP)
-                    </td>
-                </tr>
+                    if (Model.listOfCustomersToExclude.Contains(item))
+                    {
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="ConfirmPickUp" asp-route-id="@item.CustomerId">
+                                    <img src="~/images/check.jpg" height="10" />
+                                </a>
+                            </td>
+                            <td>
+                                @Html.Raw(item.FirstName)
+                            </td>
+                            <td>
+                                @Html.Raw(item.LastName)
+                            </td>
+                            <td>
+                                <a asp-action="ViewCustomerLocation" asp-route-id="@item.CustomerId">
+                                    @Html.Raw(item.AddressLine1)
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
