@@ -46,29 +46,29 @@ namespace TrashCollectorWebApp.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Employee loggedInUser = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
             Customer foundCustomer = _context.Customers.Where(a => a.CustomerId == id).SingleOrDefault();
+            var address = foundCustomer.AddressLine1;
+            address = address.Replace(' ', '+');
 
-            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address={@loggedInUser.ZIP}&sensor=false&key=AIzaSyBiroI6h2nUiwJzraZhiHpVWoN9Crm1FpA";
+            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address=@{address},@{foundCustomer.City},@{foundCustomer.State}&sensor=false&key=AIzaSyBiroI6h2nUiwJzraZhiHpVWoN9Crm1FpA";
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             XDocument xdoc = XDocument.Load(response.GetResponseStream());
-            XElement result = xdoc.Element("GeocodeResponse").Element("result");
-            XElement locationElement = result.Element("geometry").Element("location");
-            XElement lat = locationElement.Element("lat");
-            ViewBag.Latitude = lat.Value;            
-            XElement lng = locationElement.Element("lng");
-            ViewBag.Longitude = lng.Value;
+            try
+            {
+                XElement result = xdoc.Element("GeocodeResponse").Element("result");
+                XElement status = xdoc.Element("GeocodeResponse").Element("status");
+                XElement locationElement = result.Element("geometry").Element("location");
+                XElement lat = locationElement.Element("lat");
+                ViewBag.Latitude = lat.Value;
+                XElement lng = locationElement.Element("lng");
+                ViewBag.Longitude = lng.Value;
+                return View();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
-            string urlForCustomer = $"https://maps.googleapis.com/maps/api/geocode/xml?address={foundCustomer.AddressLine1}&sensor=false&key=AIzaSyBiroI6h2nUiwJzraZhiHpVWoN9Crm1FpA";
-            WebRequest webRequest = WebRequest.Create(urlForCustomer);
-            WebResponse webResponse = request.GetResponse();
-            XDocument xDocument = XDocument.Load(webResponse.GetResponseStream());
-            XElement resultForCustomer = xDocument.Element("GeocodeResponse").Element("result");
-            XElement locationElemenetForCustomer = result.Element("geometry").Element("location");
-            XElement latForCustomer = locationElemenetForCustomer.Element("lat");
-            ViewBag.LatitudeForCustomer = latForCustomer.Value;
-            XElement lngForCustomer = locationElemenetForCustomer.Element("lng");
-            ViewBag.LongitudeForCustomer = lngForCustomer.Value;
-            return View();
         }
 
         // POST: Employee/ViewCustomerLocation
