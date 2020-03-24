@@ -59,20 +59,38 @@ namespace TrashCollectorWebApp.Controllers
                 XElement status = xdoc.Element("GeocodeResponse").Element("status");
                 XElement locationElement = result.Element("geometry").Element("location");
                 XElement lat = locationElement.Element("lat");
-                ViewBag.Latitude = lat.Value;
+                foundCustomer.Latitude = double.Parse(lat.Value);
                 XElement lng = locationElement.Element("lng");
-                ViewBag.Longitude = lng.Value;
-                return View();
+                foundCustomer.Longitude = double.Parse(lng.Value);
+                return View(foundCustomer);
             }
             catch (Exception)
             {
                 return RedirectToAction(nameof(Index));
             }
-
         }
 
         // POST: Employee/ViewCustomerLocation
 
+        // GET: Employee/ViewPickUpsByDay
+        [HttpGet]
+        public ActionResult ViewPickUpsByDay(int id) 
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var foundEmployee = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            var day = DateTime.Today.DayOfWeek;
+            var date = DateTime.Today;
+            foundEmployee.listOfCustomers = _context.Customers.Where(a => a.ZIP == foundEmployee.ZIP).ToList();
+            return View(foundEmployee);
+        }
+
+        // POST: Employee/ViewPickUpsByDay
+        [HttpPost]
+        public ActionResult ViewPickUpsByDay(Employee employee, DayOfWeek dayOfWeek)
+        {
+            employee.listOfCustomers = _context.Customers.Where(a => a.DayOfTheWeek == dayOfWeek).ToList();
+            return View(employee);
+        }
 
         // GET: Employee/ConfirmPickUp
         [HttpGet]
@@ -187,13 +205,5 @@ namespace TrashCollectorWebApp.Controllers
                 return View();
             }
         }
-    }
-    public class RootObject
-    {
-        public string ErrorMessage { get; set; }
-        public List<object> results { get; set; }
-        public string status { get; set; }
-        public double customerLatitude { get; set; }
-        public double customerLongitude { get; set; }
     }
 }

@@ -12,17 +12,24 @@ namespace TrashCollectorWebApp.Models
     public class Customer
     {
         public int CustomerId { get; set; }
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
         public string LastName { get;set; }
+        [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public int ZIP { get; set; }
+        [Display(Name = "Pick Up Day")]
         public DayOfWeek DayOfTheWeek { get; set; }
+        [Display(Name = "Extra Pick Up Date")]
         public DateTime ExtraPickUpDate { get; set; }
         public bool isExtraPickUpDateSet { get; set; }
         public double Balance { get; set; }
+        [Display(Name = "Temporary Suspend Start Date")]
         public DateTime TemporarySuspendStart { get; set; }
+        [Display(Name = "Temporary Suspend End Date")]
         public DateTime TemporarySuspendEnd { get; set; }
         public bool isTemporarySuspendSet { get; set; }
         [ForeignKey("IdentityUser")]
@@ -30,6 +37,10 @@ namespace TrashCollectorWebApp.Models
         public IdentityUser IdentityUser { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> DaysOfTheWeek { get; set; }
+        [NotMapped]
+        public double Latitude { get; set; }
+        [NotMapped]
+        public double Longitude { get; set; }
         public Customer()
         {
             isExtraPickUpDateSet = false;

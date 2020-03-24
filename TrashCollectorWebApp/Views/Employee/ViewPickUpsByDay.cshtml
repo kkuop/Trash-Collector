@@ -1,0 +1,63 @@
+﻿@model TrashCollectorWebApp.Models.Employee;
+@{
+    ViewData["Title"] = "ViewPickUpsByDay";
+    Layout = "~/Views/Shared/_employeeLayout.cshtml";
+}
+@{ 
+    List<Customer> customers = ViewBag.ListOfCustomers;
+}
+
+<h1>View Pick Ups By Day</h1>
+
+<div>
+    <form>
+        <div class="form-group">
+            <label> </label>
+            <select class="form-control col-4" onchange="this.form.submit()">
+                <option value="">Select a day:</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+            <span></span>
+        </div>
+    </form>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.AddressLine1)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listOfCustomers)
+                {
+                    <tr>
+                        <td>
+                            @Html.Raw(item.FirstName)
+                        </td>
+                        <td>
+                            @Html.Raw(item.LastName)
+                        </td>
+                        <td>
+                            @Html.Raw(item.AddressLine1)
+                        </td>
+                        <td>
+                            <a asp-action="ViewCustomerLocation" asp-route-id="@item.CustomerId">
+                                @Html.Raw(item.City)
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

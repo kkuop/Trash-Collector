@@ -1,12 +1,12 @@
-﻿@model TrashCollectorWebApp.Models.Employee
+﻿@model TrashCollectorWebApp.Models.Customer
 
 @{
     ViewData["Title"] = "ViewCustomerLocation";
     Layout = "~/Views/Shared/_employeeLayout.cshtml";
 }
 @{ 
-    double lat = double.Parse(ViewBag.Latitude);
-    double lng = double.Parse(ViewBag.Longitude);
+    double lat = Model.Latitude;
+    double lng = Model.Longitude;
 }
 
 <h1>View Customer Location</h1>
