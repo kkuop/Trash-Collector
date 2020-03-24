@@ -354,3 +354,4 @@ MigrationBackup/
 /TrashCollectorWebApp/wwwroot/js*
 /TrashCollectorWebApp/wwwroot/lib*
 /TrashCollectorWebApp/appsettings*
+/TrashCollectorWebApp/ApiKey*

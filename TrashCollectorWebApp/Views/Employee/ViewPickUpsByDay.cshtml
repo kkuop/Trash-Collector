@@ -60,4 +60,17 @@
         </table>
     </div>
 </div>
+<div>
+    <h4>Customer Locations:</h4>
+    <div class="row" id="googleMaps" style="width:100%;height:400px"></div>
+</div>
 
+<script>
+    function theMap() {
+        var mapProp = {
+            center: new google.maps.LatLng(@Model.listOfCustomers[0].Latitude,@Model.listOfCustomers[0].Longitude),
+            zoom: 12,
+        };
+        var customer
+    }
+</script>

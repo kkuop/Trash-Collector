@@ -88,6 +88,10 @@ namespace TrashCollectorWebApp.Controllers
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
             employee.listOfCustomers = _context.Customers.Where(a => a.ZIP == employee.ZIP).Where(a => a.DayOfTheWeek == employee.DayOfWeekView).ToList();
+            foreach(var item in employee.listOfCustomers)
+            {
+
+            }
             return View(employee);
         }
 
