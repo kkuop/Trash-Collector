@@ -39,6 +39,17 @@ namespace TrashCollectorWebApp.Controllers
             loggedInUser.listOfCustomersToExclude = _context.Customers.Join(_context.PickUps, a => a.CustomerId, b => b.CustomerId, (a, b) => new { Customer = a, PickUp = b }).Where(c => c.PickUp.PickUpDate == DateTime.Today).Where(c => c.Customer.ZIP == loggedInUser.ZIP).Where(c => c.Customer.DayOfTheWeek == day || c.Customer.ExtraPickUpDate == date).Where(c => date < c.Customer.TemporarySuspendStart || date > c.Customer.TemporarySuspendStart && date > c.Customer.TemporarySuspendEnd).Select(c => c.Customer).ToList();
             return View(loggedInUser);
         }
+
+        // POST: Employee/Index
+        [HttpPost]
+        public ActionResult Index(Employee employee)
+        {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var loggedInUser = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+                loggedInUser.DayOfWeekView = employee.DayOfWeekView;
+                _context.SaveChanges();
+                return RedirectToAction("ViewPickUpsByDay",loggedInUser);
+        }
         
         // GET: Employee/ViewCustomerLocation
         public ActionResult ViewCustomerLocation(int id)
@@ -70,26 +81,25 @@ namespace TrashCollectorWebApp.Controllers
             }
         }
 
-        // POST: Employee/ViewCustomerLocation
-
         // GET: Employee/ViewPickUpsByDay
         [HttpGet]
-        public ActionResult ViewPickUpsByDay(int id) 
+        public ActionResult ViewPickUpsByDay(Employee employee)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var foundEmployee = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
-            foundEmployee.listOfCustomers = _context.Customers.Where(a => a.ZIP == foundEmployee.ZIP).ToList();
-            return View(foundEmployee);
+            employee.listOfCustomers = _context.Customers.Where(a => a.ZIP == employee.ZIP).Where(a => a.DayOfTheWeek == employee.DayOfWeekView).ToList();
+            return View(employee);
         }
 
         // POST: Employee/ViewPickUpsByDay
         [HttpPost]
-        public ActionResult ViewPickUpsByDay(Employee employee, DayOfWeek dayOfWeek)
+        public ActionResult ViewPickUpsByDay(int id, Employee employee)
         {
-            employee.listOfCustomers = _context.Customers.Where(a => a.DayOfTheWeek == dayOfWeek).ToList();
-            return View(employee);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _context.Employees.Where(a => a.IdentityUserId == userId).SingleOrDefault();
+            loggedInUser.DayOfWeekView = employee.DayOfWeekView;
+            _context.SaveChanges();
+            return RedirectToAction("ViewPickUpsByDay",loggedInUser);
         }
 
         // GET: Employee/ConfirmPickUp

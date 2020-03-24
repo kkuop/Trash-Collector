@@ -27,6 +27,8 @@ namespace TrashCollectorWebApp.Models
         public List<Customer> listOfCustomers { get; set; }
         [NotMapped]
         public List<Customer> listOfCustomersToExclude { get; set; }
+        [NotMapped]
+        public DayOfWeek DayOfWeekView { get; set; }
         public Employee()
         {
 

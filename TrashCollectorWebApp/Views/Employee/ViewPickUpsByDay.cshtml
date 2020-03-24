@@ -3,25 +3,22 @@
     ViewData["Title"] = "ViewPickUpsByDay";
     Layout = "~/Views/Shared/_employeeLayout.cshtml";
 }
-@{ 
-    List<Customer> customers = ViewBag.ListOfCustomers;
-}
 
 <h1>View Pick Ups By Day</h1>
 
 <div>
-    <form>
+    <form asp-action="ViewPickUpsByDay">
         <div class="form-group">
             <label> </label>
-            <select class="form-control col-4" onchange="this.form.submit()">
-                <option value="">Select a day:</option>
+            <select asp-for="DayOfWeekView" class="form-control col-4" onchange="this.form.submit()">
+                <option value="0">Sunday</option>
                 <option value="Monday">Monday</option>
                 <option value="Tuesday">Tuesday</option>
                 <option value="Wednesday">Wednesday</option>
                 <option value="Thursday">Thursday</option>
                 <option value="Friday">Friday</option>
                 <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
+                <option value="Sunday">Select a day...</option>
             </select>
             <span></span>
         </div>
@@ -37,8 +34,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.listOfCustomers)
+                @if (Model.listOfCustomers != null)
                 {
+                    foreach (var item in Model.listOfCustomers)
+                    {
                     <tr>
                         <td>
                             @Html.Raw(item.FirstName)
@@ -55,6 +54,7 @@
                             </a>
                         </td>
                     </tr>
+                    }
                 }
             </tbody>
         </table>
