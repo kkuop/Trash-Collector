@@ -60,7 +60,7 @@ namespace TrashCollectorWebApp.Controllers
             var address = foundCustomer.AddressLine1;
             address = address.Replace(' ', '+');
 
-            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address=@{address},@{foundCustomer.City},@{foundCustomer.State}&sensor=false&key=AIzaSyBiroI6h2nUiwJzraZhiHpVWoN9Crm1FpA";
+            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address=@{address},@{foundCustomer.City},@{foundCustomer.State}&sensor=false&key=@{ApiKey.Key}";
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             XDocument xdoc = XDocument.Load(response.GetResponseStream());
