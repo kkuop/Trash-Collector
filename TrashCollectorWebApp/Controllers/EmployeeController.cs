@@ -60,7 +60,7 @@ namespace TrashCollectorWebApp.Controllers
             var address = foundCustomer.AddressLine1;
             address = address.Replace(' ', '+');
 
-            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address=@{address},@{foundCustomer.City},@{foundCustomer.State}&sensor=false&key=@{ApiKey.Key}";
+            string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address={address},{foundCustomer.City},{foundCustomer.State}&sensor=false&key={ApiKey.Key}";
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             XDocument xdoc = XDocument.Load(response.GetResponseStream());
@@ -88,9 +88,31 @@ namespace TrashCollectorWebApp.Controllers
             var day = DateTime.Today.DayOfWeek;
             var date = DateTime.Today;
             employee.listOfCustomers = _context.Customers.Where(a => a.ZIP == employee.ZIP).Where(a => a.DayOfTheWeek == employee.DayOfWeekView).ToList();
-            foreach(var item in employee.listOfCustomers)
-            {
 
+            if(employee.listOfCustomers.Count >= 1 )
+            {
+                foreach (var item in employee.listOfCustomers)
+                {
+                    var address = item.AddressLine1;
+                    address = address.Replace(' ', '+');
+                    string url = $"https://maps.googleapis.com/maps/api/geocode/xml?address={address},{item.City},{item.State}&sensor=false&key={ApiKey.Key}";
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    XDocument xdoc = XDocument.Load(response.GetResponseStream());
+                    try
+                    {
+                        XElement result = xdoc.Element("GeocodeResponse").Element("result");
+                        XElement status = xdoc.Element("GeocodeResponse").Element("status");
+                        XElement locationElement = result.Element("geometry").Element("location");
+                        XElement lat = locationElement.Element("lat");
+                        item.Latitude = double.Parse(lat.Value);
+                        XElement lng = locationElement.Element("lng");
+                        item.Longitude = double.Parse(lng.Value);                        
+                    } catch
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
             }
             return View(employee);
         }
