@@ -71,7 +71,7 @@
 }
 else
 {
-    <script>
+<script>
     function theMap() {
         var mapProp = {
             center: new google.maps.LatLng(@Model.listOfCustomers[0].Latitude,@Model.listOfCustomers[0].Longitude),
@@ -86,14 +86,16 @@ else
             position: new google.maps.LatLng(@item.Latitude,@item.Longitude),
             map: map
         });
-        google.maps.event.addListener(marker, 'click', function () {
-            infowindow.setContent("@item.FirstName @item.LastName");
-            infowindow.open(map, marker);
-        });
+        (function (marker) {
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent("@item.FirstName @item.LastName");
+                infowindow.open(map, marker);
+            });
+        })(marker);
         </text>
         }
     }
-    </script>
+</script>
     <script src="https://maps.googleapis.com/maps/api/js?key=@ApiKey.Key&callback=theMap"></script>
 
 }
